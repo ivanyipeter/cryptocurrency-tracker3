@@ -3,7 +3,7 @@
     </CoinDetailsModal>
 
     <h1>Markets</h1>
-    <input v-model="text" placeholder="Search..">
+    <input v-model="searchCoin" placeholder="Search..">
     <br>
     <table>
         <thead>
@@ -43,7 +43,7 @@
         data() {
             return {
                 currencyList: [],
-                text: "",
+                searchCoin: "",
                 input: null,
                 coinId: null,
                 coinSymbol: null,
@@ -78,7 +78,7 @@
         ,
         computed: {
             filteredList() {
-                return this.currencyList.filter(f => f.name.toUpperCase().includes(this.text.toUpperCase()) || f.symbol.toUpperCase().includes(this.text.toUpperCase()));
+                return this.currencyList.filter(f => f.name.toUpperCase().includes(this.searchCoin.toUpperCase()) || f.symbol.toUpperCase().includes(this.searchCoin.toUpperCase()));
             }
         },
         mounted() {
