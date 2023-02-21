@@ -91,12 +91,12 @@
                         break;
                     case "w":
                         startTime = this.getStartTime(7);
-                        interval = "USDT&startTime=" + startTime + "&endTime=" + endTime + "&interval=1h";
+                        interval = "USDT&startTime=" + startTime + "&endTime=" + endTime + "&interval=12h";
                         this.getCoinHistoricalData(interval);
                         break;
                     case "m":
-                        startTime = this.getStartTime(30);
-                        interval = "USDT&startTime=" + startTime + "&endTime=" + endTime + "&interval=8h";
+                        startTime = this.getStartTime(31);
+                        interval = "USDT&startTime=" + startTime + "&endTime=" + endTime + "&interval=12h";
                         this.getCoinHistoricalData(interval);
                         break;
                     case "y":
