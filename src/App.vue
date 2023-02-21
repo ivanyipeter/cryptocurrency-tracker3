@@ -137,7 +137,7 @@
 
     input {
         display: block;
-        color: black;
+        color: white;
         margin-left: auto;
         margin-right: auto;
         width: 60%;
