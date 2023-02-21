@@ -13,16 +13,17 @@
             <hr>
             <div class="header">
                 <div class="item">
-                    <button v-on:click="select($event)" class="btn" type="button" value="d">1d</button>
+                    <button ref="initBtn" v-on:click="selectInterval($event)" class="btn" type="button" value="d">1d
+                    </button>
                 </div>
                 <div class="item">
-                    <button v-on:click="select($event)" class="btn" type="button" value="w">1w</button>
+                    <button v-on:click="selectInterval($event)" class="btn" type="button" value="w">1w</button>
                 </div>
                 <div class="item">
-                    <button v-on:click="select($event)" class="btn" type="button" value="m">1m</button>
+                    <button v-on:click="selectInterval($event)" class="btn" type="button" value="m">1m</button>
                 </div>
                 <div class="item">
-                    <button v-on:click="select($event)" class="btn" type="button" value="y">1y</button>
+                    <button v-on:click="selectInterval($event)" class="btn" type="button" value="y">1y</button>
                 </div>
             </div>
 
@@ -46,7 +47,6 @@
         data() {
             return {
                 coinData: {},
-
             }
         },
         methods: {
@@ -65,52 +65,61 @@
                 this.coinData = data;
             },
             async getCoinHistoricalData(interval) {
-                let dateNow = new Date().getTime();
+                if (this.chart !== undefined) {
+                    this.chart.dispose();
+                }
                 let coinHistory = [];
                 await fetch("https://api.binance.com/api/v3/klines?symbol=" + this.coinSymbol.toUpperCase() + interval).then(res => res.json()).then(data => {
                     for (let i = 0; i < data.length; i++) {
                         coinHistory.push({date: data[i][0], name: "", value: data[i][4]})
                     }
                 }).catch((e) => {
-                    alert(e)
+                    alert("this coin is not listed on binance for trade and service");
                 });
                 this.createChart(coinHistory);
             },
-            select(e) {
-                this.chart.dispose();
-                let endTime = new Date().getTime();
+            selectInterval(e) {
                 let startTime = null;
+                let endTime = new Date().getTime();
                 let btnValue = e.target.value;
                 let interval = "";
                 switch (btnValue) {
                     case "d":
-                        startTime = new Date(new Date().setDate(new Date().getDate() - 1)).getTime();
+                        startTime = this.getStartTime(1);
                         interval = "USDT&startTime=" + startTime + "&endTime=" + endTime + "&interval=15m";
                         this.getCoinHistoricalData(interval);
                         break;
                     case "w":
-                        startTime = new Date(new Date().setDate(new Date().getDate() - 7)).getTime();
+                        startTime = this.getStartTime(7);
                         interval = "USDT&startTime=" + startTime + "&endTime=" + endTime + "&interval=1h";
                         this.getCoinHistoricalData(interval);
                         break;
                     case "m":
-                        startTime = new Date(new Date().setDate(new Date().getDate() - 30)).getTime();
+                        startTime = this.getStartTime(30);
                         interval = "USDT&startTime=" + startTime + "&endTime=" + endTime + "&interval=8h";
                         this.getCoinHistoricalData(interval);
                         break;
                     case "y":
-                        startTime = new Date(new Date().setDate(new Date().getDate() - 365)).getTime();
+                        startTime = this.getStartTime(365);
                         interval = "USDT&startTime=" + startTime + "&endTime=" + endTime + "&interval=1w";
                         this.getCoinHistoricalData(interval);
                         break;
                 }
             },
+            getStartTime(days) {
+                const today = new Date();
+                const startTime = new Date();
+                startTime.setDate(today.getDate() - days);
+                return startTime.getTime();
+            },
+            clickIntervalBtn() {
+                let el = this.$refs.initBtn;
+                el.focus();
+                el.click();
+            },
 
             createChart(coinHistory) {
                 let chart = am4core.create(this.$refs.chartdiv, am4charts.XYChart);
-                // chart.colors.list = [
-                //     am4core.color("#F9F871")
-                // ];
                 chart.paddingRight = 20;
 
                 let data = [];
@@ -126,7 +135,6 @@
                 }
 
                 chart.data = data;
-
                 let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
                 dateAxis.renderer.grid.template.location = 0;
                 dateAxis.renderer.labels.template.fill = am4core.color("#ffffff");
@@ -153,15 +161,10 @@
         computed() {
         },
         created() {
-            // this.getCoinDetails();
         },
 
         mounted() {
-
-            let startTime = new Date(new Date().setDate(new Date().getDate() - 1)).getTime();
-            let endTime = new Date().getTime();
-           let  interval = "USDT&startTime=" + startTime + "&endTime=" + endTime + "&interval=15m";
-            this.getCoinHistoricalData(interval);
+            this.clickIntervalBtn();
         },
         unmounted() {
             if (this.chart) {
