@@ -1,7 +1,11 @@
 <template>
-    <CoinDetailsModal v-if="showCoinModal" :coinId="coinId" :coinSymbol="coinSymbol" :coinHttp="coinHttp"  @close="closeCoinDetailsModal">
+    <CoinDetailsModal v-if="showCoinModal" :coinId="coinId" :coinSymbol="coinSymbol" :coinHttp="coinHttp"
+                      @close="closeCoinDetailsModal">
     </CoinDetailsModal>
-
+    <a href="https://github.com/ivanyipeter/cryptocurrency-tracker3" target="_blank">
+        <div class="top-right"><img class="github-logo" src="./assets/GitHub-Mark.png" alt="alt-text">
+        </div>
+    </a>
     <h1>Markets</h1>
     <input v-model="searchCoin" placeholder="Search..">
     <br>
@@ -14,7 +18,9 @@
             <th style="width: 10%">Name</th>
             <th>Current Price</th>
             <th>Price Change</th>
-            <th>Market Cap</th>
+            <th>Market Cap
+                <div v-on:click="sortByMarketCap" :class="this.marketCapSortAsc ? 'up-arrow' : 'down-arrow' "></div>
+            </th>
             <th></th>
         </tr>
         </thead>
@@ -48,11 +54,12 @@
                 coinId: null,
                 coinSymbol: null,
                 coinHttp: null,
-                showCoinModal: false
+                showCoinModal: false,
+                marketCapSortAsc: false,
             }
         },
         methods: {
-            async getCoins() {
+            getCoins() {
                 fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false")
                     .then(res => res.json())
                     .then(data => {
@@ -61,6 +68,21 @@
                     alert(e)
                 });
             },
+            sortByMarketCap() {
+                this.marketCapSortAsc = !this.marketCapSortAsc;
+                if (this.marketCapSortAsc) {
+                    this.getCoinsByMarketCapAsc();
+                } else {
+                    this.getCoinsByMarketCapDesc();
+                }
+            },
+            getCoinsByMarketCapAsc() {
+                this.currencyList = this.currencyList.sort((a, b) => (a.market_cap > b.market_cap) ? 1 : (a.market_cap < b.market_cap) ? -1 : 0);
+            },
+            getCoinsByMarketCapDesc() {
+                this.currencyList = this.currencyList.sort((a, b) => (a.market_cap < b.market_cap) ? 1 : (a.market_cap > b.market_cap) ? -1 : 0);
+            },
+
             showDetails(coinId, coinSymbol, coinHttp) {
                 this.coinId = coinId;
                 this.coinSymbol = coinSymbol;
@@ -70,10 +92,9 @@
             priceChangeColor(price) {
                 return price > 0 ? 'price-up' : 'price-down'
             },
-
             closeCoinDetailsModal() {
                 this.showCoinModal = false;
-            }
+            },
         }
         ,
         computed: {
@@ -125,10 +146,6 @@
         height: 30px;
     }
 
-    /*thead {*/
-    /*    font-size: 20px;*/
-    /*}*/
-
     h1 {
         color: white;
         margin-bottom: 20px;
@@ -161,14 +178,48 @@
 
     button {
         padding: 5px 10px 5px 10px;
-        background: #00003B;
-        border: none;
+        background: #303655;
         color: yellow;
+        border-radius: 5px;
+        transition-duration: 0.5s;
     }
 
     button:hover {
-        color: greenyellow;
+        background: white;
+        color: black;
     }
 
+    .up-arrow {
+        width: 0;
+        height: 0;
+        border: solid 5px transparent;
+        background: #00003B;
+        border-bottom: solid 7px white;
+        border-top-width: 0;
+        cursor: pointer;
+        display: inline-block;
+    }
 
+    .down-arrow {
+        width: 0;
+        height: 0;
+        border: solid 5px transparent;
+        background: #00003B;
+        border-top: solid 7px white;
+        border-bottom-width: 0;
+        margin-top: 1px;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    .top-right {
+        position: fixed;
+        top: 95%;
+        left: 0px;
+    }
+
+    .github-logo {
+        opacity: 50%;
+        height: 50px;
+    }
 </style>
