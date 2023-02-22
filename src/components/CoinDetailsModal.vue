@@ -1,34 +1,32 @@
 <template>
     <div class="backdrop">
         <div class="modal">
-            <div class="close">
-                <span @click="closeModal">x</span>
-            </div>
-            <div class="header">
+            <div class="flex-container">
                 <img v-if="coinHttp" class="item" :src="coinHttp.replace('large','small')">
                 <p class="item">{{coinId.toUpperCase()}}</p>
                 <p class="item">{{coinSymbol.toUpperCase()}} / USDT </p>
-                <!--                    <a v-if="coinData.links.homepage[0]" class="item" :href="coinData.links.homepage[0]" target="_blank">{{coinData.links.homepage[0].replace('http://','')}}</a>-->
+<!--                                    <a v-if="coinData.links.homepage[0]" class="item" :href="coinData.links.homepage[0]" target="_blank">{{coinData.links.homepage[0].replace('http://','')}}</a>-->
             </div>
             <hr>
-            <div class="header">
+            <div class="flex-container">
                 <div class="item">
-                    <button ref="initBtn" v-on:click="selectInterval($event)" class="btn" type="button" value="d">1d
-                    </button>
+                    <button ref="initBtn" v-on:click="selectInterval($event)" class="chart-btn" type="button" value="d">1d</button>
                 </div>
                 <div class="item">
-                    <button v-on:click="selectInterval($event)" class="btn" type="button" value="w">1w</button>
+                    <button v-on:click="selectInterval($event)" class="chart-btn" type="button" value="w">1w</button>
                 </div>
                 <div class="item">
-                    <button v-on:click="selectInterval($event)" class="btn" type="button" value="m">1m</button>
+                    <button v-on:click="selectInterval($event)" class="chart-btn" type="button" value="m">1m</button>
                 </div>
                 <div class="item">
-                    <button v-on:click="selectInterval($event)" class="btn" type="button" value="y">1y</button>
+                    <button v-on:click="selectInterval($event)" class="chart-btn" type="button" value="y">1y</button>
                 </div>
             </div>
 
             <div class="chart" ref="chartdiv">
-
+            </div>
+            <div class="chart-footer">
+                <button @click="closeModal" class="btn">Close</button>
             </div>
         </div>
     </div>
@@ -233,7 +231,7 @@
         color: yellowgreen;
     }
 
-    .header {
+    .flex-container {
         display: flex;
     }
 
@@ -256,17 +254,27 @@
         height: 500px;
     }
 
-    .btn {
+    .chart-btn, .btn {
         padding: 5px 10px 5px 10px;
         background: #00003B;
         border: solid 1px yellow;
         border-radius: 5px;
         color: yellow;
+        transition-duration: 0.4s;
     }
 
-    .btn:focus {
+    .chart-btn:focus {
         color: black;
         background: white;
+    }
+
+    .btn:hover {
+        background: white;
+        color: black;
+    }
+
+    .chart-footer {
+        text-align: right;
     }
 
 </style>
