@@ -74,7 +74,7 @@
                         coinHistory.push({date: data[i][0], name: "", value: data[i][4]})
                     }
                 }).catch((e) => {
-                    alert("this coin is not listed on binance for trade and service");
+                    alert("This coin is not listed on Binance for trade and service.");
                 });
                 this.createChart(coinHistory);
             },

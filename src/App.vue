@@ -3,10 +3,12 @@
                       @close="closeCoinDetailsModal">
     </CoinDetailsModal>
     <a href="https://github.com/ivanyipeter/cryptocurrency-tracker3" target="_blank">
-        <div class="top-right"><img class="github-logo" src="./assets/GitHub-Mark.png" alt="alt-text">
+        <div class="git-flash top-right"><img class="github-logo" src="./assets/GitHub-Mark.png" alt="alt-text">
         </div>
     </a>
-    <h1>Markets</h1>
+    <div class="header">
+        <h1>MARKETS</h1>
+    </div>
     <input v-model="searchCoin" placeholder="Search..">
     <br>
     <table>
@@ -17,7 +19,9 @@
             <th style="width: 10%"></th>
             <th style="width: 10%">Name</th>
             <th>Current Price</th>
-            <th>Price Change</th>
+            <th>Price Change
+                <div v-on:click="sortByPriceChange" :class="this.priceChangeSortAsc ? 'up-arrow' : 'down-arrow' "></div>
+            </th>
             <th>Market Cap
                 <div v-on:click="sortByMarketCap" :class="this.marketCapSortAsc ? 'up-arrow' : 'down-arrow' "></div>
             </th>
@@ -56,6 +60,7 @@
                 coinHttp: null,
                 showCoinModal: false,
                 marketCapSortAsc: false,
+                priceChangeSortAsc: false
             }
         },
         methods: {
@@ -82,7 +87,20 @@
             getCoinsByMarketCapDesc() {
                 this.currencyList = this.currencyList.sort((a, b) => (a.market_cap < b.market_cap) ? 1 : (a.market_cap > b.market_cap) ? -1 : 0);
             },
-
+            sortByPriceChange() {
+                this.priceChangeSortAsc = !this.priceChangeSortAsc;
+                if (this.priceChangeSortAsc) {
+                    this.getCoinsByPriceChangeAsc();
+                } else {
+                    this.getCoinsByPriceChangeDesc();
+                }
+            },
+            getCoinsByPriceChangeAsc() {
+                this.currencyList = this.currencyList.sort((a, b) => (a.price_change_24h > b.price_change_24h) ? 1 : (a.price_change_24h < b.price_change_24h) ? -1 : 0);
+            },
+            getCoinsByPriceChangeDesc() {
+                this.currencyList = this.currencyList.sort((a, b) => (a.price_change_24h < b.price_change_24h) ? 1 : (a.price_change_24h > b.price_change_24h) ? -1 : 0);
+            },
             showDetails(coinId, coinSymbol, coinHttp) {
                 this.coinId = coinId;
                 this.coinSymbol = coinSymbol;
@@ -95,8 +113,7 @@
             closeCoinDetailsModal() {
                 this.showCoinModal = false;
             },
-        }
-        ,
+        },
         computed: {
             filteredList() {
                 return this.currencyList.filter(f => f.name.toUpperCase().includes(this.searchCoin.toUpperCase()) || f.symbol.toUpperCase().includes(this.searchCoin.toUpperCase()));
@@ -116,12 +133,9 @@
     }
 
     #app {
-        /*font-family: Avenir, Helvetica, Arial, sans-serif;*/
         font-family: "Segoe UI", serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        /*text-align: center;*/
-        /*margin-top: 100px;*/
         background: #00003B;
     }
 </style>
@@ -146,10 +160,11 @@
         height: 30px;
     }
 
-    h1 {
+    .header {
         color: white;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         text-align: center;
+        font-size: 25px;
     }
 
     input {
@@ -213,13 +228,23 @@
     }
 
     .top-right {
-        position: fixed;
-        top: 95%;
-        left: 0px;
+        position: absolute;
+        top: 60px;
+        left: 104rem;
     }
 
     .github-logo {
-        opacity: 50%;
-        height: 50px;
+        height: 30px;
+        opacity: 20%;
+    }
+
+    .git-flash {
+        animation: blinker 5s infinite;
+    }
+
+    @keyframes blinker {
+        30% {
+            opacity: 60%;
+        }
     }
 </style>
