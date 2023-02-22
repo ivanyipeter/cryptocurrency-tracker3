@@ -2,12 +2,13 @@
     <CoinDetailsModal v-if="showCoinModal" :coinId="coinId" :coinSymbol="coinSymbol" :coinHttp="coinHttp"
                       @close="closeCoinDetailsModal">
     </CoinDetailsModal>
-    <a href="https://github.com/ivanyipeter/cryptocurrency-tracker3" target="_blank">
-        <div class="git-flash top-right"><img class="github-logo" src="./assets/GitHub-Mark.png" alt="alt-text">
-        </div>
-    </a>
+
     <div class="header">
         <h1>MARKETS</h1>
+        <a href="https://github.com/ivanyipeter/cryptocurrency-tracker3" target="_blank">
+            <div class="git-flash top-right"><img class="github-logo" src="./assets/GitHub-Mark.png" alt="alt-text">
+            </div>
+        </a>
     </div>
     <input v-model="searchCoin" placeholder="Search..">
     <br>
@@ -167,6 +168,10 @@
         font-size: 25px;
     }
 
+    h1 {
+        margin: 0px;
+    }
+
     input {
         display: block;
         color: white;
@@ -228,12 +233,13 @@
     }
 
     .top-right {
-        position: absolute;
-        top: 60px;
-        left: 104rem;
+        /*position: absolute;*/
+        /*top: 60px;*/
+        /*left: 104rem;*/
     }
 
     .github-logo {
+        padding: 0;
         height: 30px;
         opacity: 20%;
     }
