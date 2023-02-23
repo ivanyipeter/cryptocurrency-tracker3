@@ -134,7 +134,7 @@
     }
 
     #app {
-        font-family: "Segoe UI", serif;
+        font-family: "Segoe UI Light", serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         background: #00003B;
